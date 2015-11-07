@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TravCast</title>
+    <style>
+        *{
+            font-family: Arial;
+        }
+
+        #nickWrap{
+            position: absolute;
+            margin-top: 50%;
+            margin-left: 50%;
+            transform: translate(-50%);
+        }
+
+        #chat{
+            height: 500px;
+            font-size: 18px;
+        }
+
+        #send-message{
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            height: 250px;
+            font-size: 25px;
+            transform: translate(-50%);
+        }
+
+        #send-message input{
+            margin-left: 50%;
+            transform: translate(-50%);
+        }
+
+        #contentWrap{
+            display: none;
+        }
+
+        #chatWrap{
+            float: left;
+        }
+
+        #users{
+            height: 35vh;
+            width: 15%;
+            float: right;
+        }
+    </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+</head>
+<body>
+<div id="nickWrap">
+    <p>Enter a username:</p>
+    <p id="nickError"></p>
+    <form id="setNick" class="">
+        <div class="form-group">
+            <input class="form-inline" id="nickname" size="35" />
+            <input class="form btn btn-success" type="submit"/>
+        </div>
+    </form>
+</div>
+
+<div id="contentWrap">
+    <div id="chatWrap">
+        <div id="chat">
+            <!-- Messages are appended here -->
+        </div>
+        <form id="send-message">
+            <input id="message" size="35"/>
+            <input class="btn btn-success" type="submit"/>
+        </form>
+    </div>
+</div>
+
+<div id="users">
+</div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://cdn.socket.io/socket.io-1.3.7.js"></script>
+    <script>
+        $(function($){
+            var socket = io.connect();
+            var $nickForm = $('#setNick');
+            var $nickError = $('#nickError');
+            var $nickBox = $('#nickBox');
+            var $nickname = $('#nickname');
+            var $messageForm = $('#send-message');
+            var $messageBox = $('#message');
+            var $chat = $('#chat');
+            var $users = $('#users');
+
+            $nickForm.submit(function(e){
+                e.preventDefault();
+                socket.emit('new user' , $nickname.val(), function(data){//nickBox is the name passed in through the #nickBox input
+                    if(data){
+                        $('#nickWrap').hide();
+                        $('#contentWrap').show();
+                        console.log("index.html line 76 data is: " , data);
+                    } else {
+                        $nickError.html("That username is spoken for and data is: " , data);
+                    }
+                });
+                $nickBox.val("");
+            });
+
+            socket.on('usernames' , function(data){
+                console.log('getting nicknames: ' , data);
+                var html = "";
+                for(var i = 0; i < data.length; i++){
+                    html += data[i] + '</br>';
+                }
+                $users.html(html);
+            });
+
+            $messageForm.submit(function(e){
+                e.preventDefault();
+                socket.emit('send message', $messageBox.val());
+                $messageBox.val("");
+            });
+
+            socket.on('new message' , function(data){
+                $chat.append("<b>" + data.nick + ": </b>" + data.msg + "</br>");
+            });
+        });
+    </script>
+</body>
+</html>

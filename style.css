@@ -1,0 +1,17 @@
+#chat{
+    height: 500px;
+}
+
+#send-message{
+    position: absolute;
+    left: 0;
+    bottom: 0;
+}
+
+#contentWrap{
+    display: none;
+}
+
+#chatWrap{
+    float: left;
+}
