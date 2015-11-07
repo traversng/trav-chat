@@ -20,6 +20,7 @@ io.sockets.on('connection' , function(socket){
             callback(true);
             socket.nickname = name;
             nicknames.push(socket.nickname);
+            io.sockets.emit('new message' , {nick: socket.nickname, msg: "has connected :)"});
             updateNicknames();
         }
     });
@@ -39,6 +40,8 @@ io.sockets.on('connection' , function(socket){
     socket.on('disconnect' , function(data){
         if(!socket.nickname) return;
         nicknames.splice(nicknames.indexOf(socket.nickname) , 1);
+        console.log(socket.nickname+ ' has disconnected');
+        io.sockets.emit('new message' , {nick: socket.nickname, msg: "has disconnected :("});
         updateNicknames();
     });
 });
