@@ -8,16 +8,25 @@
             font-family: Arial;
         }
 
+        body{
+            position: relative;
+        }
+
         #nickWrap{
             position: absolute;
             margin-top: 50%;
             margin-left: 50%;
-            transform: translate(-50%);
+            transform: translate(-50%, -50%);
+        }
+
+        #setNick{
+            bottom: 5vh;
         }
 
         #chat{
-            height: 500px;
+            height: 100%;
             font-size: 18px;
+            margin-left: 25px;
         }
 
         #send-message{
@@ -46,6 +55,16 @@
             width: 15%;
             float: right;
         }
+
+        .error{
+            color: red;
+        }
+
+        .whisper{
+            color: salmon;
+            font-style: italic;
+        }
+
     </style>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
 </head>
@@ -53,14 +72,13 @@
 <div id="nickWrap">
     <p>Enter a username:</p>
     <p id="nickError"></p>
-    <form id="setNick" class="">
+    <form id="setNick" class="form">
         <div class="form-group">
             <input class="form-inline" id="nickname" size="35" />
             <input class="form btn btn-success" type="submit"/>
         </div>
     </form>
 </div>
-
 <div id="contentWrap">
     <div id="chatWrap">
         <div id="chat">
@@ -108,21 +126,39 @@
                 console.log('getting nicknames: ' , data);
                 var html = "";
                 for(var i = 0; i < data.length; i++){
-                    html += data[i] + '</br>';
+                    html +="<span onclick=" + "whisperName(this,'/w')" + ">" + data[i] + "</span></br>";
                 }
                 $users.html(html);
             });
 
             $messageForm.submit(function(e){
                 e.preventDefault();
-                socket.emit('send message', $messageBox.val());
+                socket.emit('send message', $messageBox.val(), function(data){
+                    $chat.append("<span class='error'><b>" + data + "</span></br>");
+                });
                 $messageBox.val("");
             });
 
             socket.on('new message' , function(data){
-                $chat.append("<b>" + data.nick + ": </b>" + data.msg + "</br>");
+                $chat.append("<span class='msg'><b>" + data.nick + ": </b>" + data.msg + "</span></br>");
+            });
+
+            socket.on('whisper' , function(data){
+                $chat.append("<span class='whisper'><br>" + data.nick + ": </b>" + "whispers - " + data.msg + " </span></br>");
             });
         });
+
+        function whisperName(ele, spChar){
+            var str = spChar + " ";
+            var $msg = $('#message');
+
+            str += $(ele).text() + " ";
+            console.log("String Test:", str);
+            $msg.val(str);
+            $msg.focus();
+
+            return str;
+        }
     </script>
 </body>
 </html>

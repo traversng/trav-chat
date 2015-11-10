@@ -2,7 +2,7 @@ var express = require('express'),
     app = express(),
     server = require('http').createServer(app),
     io = require('socket.io').listen(server),
-    nicknames = [];
+    users = {};
 
 server.listen(3000);
 
@@ -13,24 +13,44 @@ app.get('/', function(req, res){
 
 io.sockets.on('connection' , function(socket){
     socket.on('new user' , function(name, callback){
-        console.log('index.js line 16, logged users: ', nicknames + " new user: " + name);
-        if (nicknames.indexOf(name) != -1){
+        console.log('index.js line 16, logged users: ', users + " new user: " + name);
+        if (name in users){
             callback(false);
         } else {
             callback(true);
             socket.nickname = name;
-            nicknames.push(socket.nickname);
+            users[socket.nickname] = socket;
             io.sockets.emit('new message' , {nick: socket.nickname, msg: "has connected :)"});
-            updateNicknames();
+            updateUsers();
         }
     });
 
-    function updateNicknames(){// Updates nicknames as they are created and when a user disconnects
-        io.sockets.emit('usernames' , nicknames);
+    function updateUsers(){// Updates users as they are created and when a user disconnects
+        io.sockets.emit('usernames' , Object.keys(users));
     }
 
-    socket.on('send message' , function(msg){
-        io.sockets.emit('new message' ,{msg: msg, nick: socket.nickname});
+    socket.on('send message' , function(msg, callback){
+        var msg = msg.trim();
+        if(msg.substr(0,2) ==='/w'){
+            msg = msg.substr(3)
+            var index = msg.indexOf(' ');
+            if(index !== -1){
+                var name = msg.substr(0, index);
+                var msg = msg.substr(index + 1);
+                if(name in users){
+                    console.log("Whisper was sent!");
+                    users[name].emit('whisper' ,{msg: msg, nick: socket.nickname});
+                } else {
+                    callback('Error invalid user!');
+                }
+
+            } else {
+                callback('Error you must add a message to your whisper!');
+            }
+
+        } else {
+            io.sockets.emit('new message' ,{msg: msg, nick: socket.nickname});
+        }
     });
 
     socket.on('message' , function(msg){
@@ -39,9 +59,9 @@ io.sockets.on('connection' , function(socket){
 
     socket.on('disconnect' , function(data){
         if(!socket.nickname) return;
-        nicknames.splice(nicknames.indexOf(socket.nickname) , 1);
+        delete users[socket.nickname];
         console.log(socket.nickname+ ' has disconnected');
-        io.sockets.emit('new message' , {nick: socket.nickname, msg: "has disconnected :("});
-        updateNicknames();
+        io.sockets.emit('new message' , {nick: socket.nickname, msg: "has disconnected :(..."});
+        updateUsers();
     });
 });
