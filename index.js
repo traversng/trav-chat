@@ -2,6 +2,7 @@ var express = require('express'),
     app = express(),
     server = require('http').createServer(app),
     io = require('socket.io').listen(server),
+    Firebase = require("firebase");
     users = {};
 
 server.listen(3000);
@@ -13,7 +14,6 @@ app.get('/', function(req, res){
 
 io.sockets.on('connection' , function(socket){
     socket.on('new user' , function(name, callback){
-        console.log('index.js line 16, logged users: ', users + " new user: " + name);
         if (name in users){
             callback(false);
         } else {
@@ -22,6 +22,7 @@ io.sockets.on('connection' , function(socket){
             users[socket.nickname] = socket;
             io.sockets.emit('new message' , {nick: socket.nickname, msg: "has connected :)"});
             updateUsers();
+            console.log('index.js line 16, logged users: ', Object.keys(users).length + " new user: " + name);
         }
     });
 

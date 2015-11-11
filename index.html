@@ -67,6 +67,7 @@
 
     </style>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+    <script src="https://cdn.firebase.com/js/client/2.3.1/firebase.js"></script>
 </head>
 <body>
 <div id="nickWrap">
@@ -107,10 +108,15 @@
             var $messageBox = $('#message');
             var $chat = $('#chat');
             var $users = $('#users');
+            var fireBaseRef = new Firebase('https://shining-torch-2771.firebaseIO.com');
 
             $nickForm.submit(function(e){
                 e.preventDefault();
-                socket.emit('new user' , $nickname.val(), function(data){//nickBox is the name passed in through the #nickBox input
+                $nickname.val().split(' ');
+                var cleanName = $nickname.val().split(' ');
+                var cleanerName = cleanName.join("_");
+                console.log('cleanedName is: ', cleanerName);
+                socket.emit('new user' , cleanerName, function(data){//nickname is the name passed in through the #nickBox input
                     if(data){
                         $('#nickWrap').hide();
                         $('#contentWrap').show();
@@ -141,12 +147,18 @@
 
             socket.on('new message' , function(data){
                 $chat.append("<span class='msg'><b>" + data.nick + ": </b>" + data.msg + "</span></br>");
+
+                //push data to firebase
+                fireBaseRef.push({name: data.nick, text: data.msg, timestamp: Date.now()});
             });
 
             socket.on('whisper' , function(data){
                 $chat.append("<span class='whisper'><br>" + data.nick + ": </b>" + "whispers - " + data.msg + " </span></br>");
+                fireBaseRef.push({name: data.nick, whisper: data.msg, timestamp: Date.now()});
             });
         });
+
+
 
         function whisperName(ele, spChar){
             var str = spChar + " ";
