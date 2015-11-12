@@ -20,7 +20,7 @@ io.sockets.on('connection' , function(socket){
             callback(true);
             socket.nickname = name;
             users[socket.nickname] = socket;
-            io.sockets.emit('new message' , {nick: socket.nickname, msg: "has connected :)"});
+            //io.sockets.emit('new message' , {nick: socket.nickname, msg: "has connected :)"});
             updateUsers();
             console.log('index.js line 16, logged users: ', Object.keys(users).length + " new user: " + name);
         }
@@ -33,7 +33,7 @@ io.sockets.on('connection' , function(socket){
     socket.on('send message' , function(msg, callback){
         var msg = msg.trim();
         if(msg.substr(0,2) ==='/w'){
-            msg = msg.substr(3)
+            msg = msg.substr(3);
             var index = msg.indexOf(' ');
             if(index !== -1){
                 var name = msg.substr(0, index);
@@ -54,15 +54,15 @@ io.sockets.on('connection' , function(socket){
         }
     });
 
-    socket.on('message' , function(msg){
-        io.socket.emit('new message' , msg);
-    });
+    //socket.on('message' , function(msg){
+    //    io.socket.emit('new message' , msg);
+    //});
 
     socket.on('disconnect' , function(data){
         if(!socket.nickname) return;
+        io.sockets.emit('disconnect' , {nick: socket.nickname, disconnect: Date.now()});
         delete users[socket.nickname];
-        console.log(socket.nickname+ ' has disconnected');
-        io.sockets.emit('new message' , {nick: socket.nickname, msg: "has disconnected :(..."});
+        console.log(socket.nickname + ' has disconnected');
         updateUsers();
     });
 });
