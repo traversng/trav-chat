@@ -3,85 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <title>TravCast</title>
-    <style>
-        *{
-            font-family: Arial;
-        }
-
-        body{
-            position: relative;
-        }
-
-        #nickWrap{
-            position: absolute;
-            margin-top: 50%;
-            margin-left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        #setNick{
-            bottom: 5vh;
-        }
-
-        #chat{
-            height: 100%;
-            font-size: 18px;
-            margin-left: 25px;
-        }
-
-        #send-message{
-            position: fixed;
-            left: 50%;
-            bottom: 5vh;
-            font-size: 25px;
-            transform: translate(-50%);
-        }
-
-        #send-message input{
-            margin-left: 50%;
-            transform: translate(-50%);
-        }
-
-        #contentWrap{
-            display: none;
-        }
-
-        #chatWrap{
-            float: left;
-        }
-
-        #users{
-            height: 35vh;
-            width: 15%;
-            float: right;
-        }
-
-        .error{
-            color: red;
-        }
-
-        .whisper{
-            color: salmon;
-            font-style: italic;
-        }
-
-    </style>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
     <script src="https://cdn.firebase.com/js/client/2.3.1/firebase.js"></script>
 </head>
 <body>
-<div id="nickWrap">
-    <p>Enter a username:</p>
-    <p id="nickError"></p>
-    <form id="setNick" class="form">
-        <div class="form-group">
-            <input class="form-inline" id="nickname" size="35" />
-            <input class="form btn btn-success" type="submit"/>
+<div id="login-wrap">
+    <div class="row">
+        <div class="main">
+            <h3>Please Log In, or <a href="#">Sign Up</a></h3>
+            <div class="row">
+                <a id="facebook-btn" class="btn btn-block btn-social btn-facebook">
+                    <span class="fa fa-facebook"></span> Sign in with Facebook
+                </a>
+                <a id="google-btn" class="btn btn-block btn-social btn-google">
+                    <span class="fa fa-google"></span> Sign in with Google
+                </a>
+                <a id="github-btn" class="btn btn-block btn-social btn-github">
+                    <span class="fa fa-github"></span> Sign in with GitHub
+                </a>
+            </div>
+            <div class="login-or">
+                <hr class="hr-or">
+                <span class="span-or">or</span>
+            </div>
+                <form id="login-form" role="form" method="post" action="/login">
+                    <div class="form-group">
+                        <label for="usernameEmail">Username or email</label>
+                        <input type="text" class="form-control" id="usernameEmail">
+                    </div>
+                    <div class="form-group">
+                        <a class="pull-right" href="#">Forgot password?</a>
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password">
+                    </div>
+                    <div class="checkbox pull-right">
+                        <label>
+                            <input type="checkbox">
+                            Remember me </label>
+                    </div>
+                    <button type="submit" class="btn btn btn-primary">
+                        Log In
+                    </button>
+                </form><!-- login-form -->
+            </div>
         </div>
-    </form>
+    </div>
 </div>
-<div id="contentWrap">
-    <div id="chatWrap">
+<!--<div id="nickWrap"> ================== Adding Social User Authentication ====================-->
+    <!--<p>Enter a username:</p>-->
+    <!--<p id="nickError"></p>-->
+    <!--<form id="setNick" class="form">-->
+        <!--<div class="form-group">-->
+            <!--<input class="form-inline" id="nickname" size="35" />-->
+            <!--<input class="form btn btn-success" type="submit"/>-->
+        <!--</div>-->
+    <!--</form>-->
+<!--</div>-->
+<div id="content-wrap">
+    <div id="chat-wrap">
         <div id="chat">
             <!-- Messages are appended here -->
         </div>
@@ -100,33 +80,90 @@
     <script>
         $(function($){
             var socket = io.connect();
-            var $nickForm = $('#setNick');
-            var $nickError = $('#nickError');
-            var $nickBox = $('#nickBox');
-            var $nickname = $('#nickname');
             var $messageForm = $('#send-message');
             var $messageBox = $('#message');
             var $chat = $('#chat');
             var $users = $('#users');
-            var fireBaseRef = new Firebase('https://shining-torch-2771.firebaseIO.com');
+            var ref = new Firebase('https://travcast.firebaseio.com');//This creates a connection to our unique firebase db
+            var usersRef = ref.child("users");//Creates and uses a database child called users...this is where we will store our users information
+            var $username = $('#usernameEmail');
+            var $password = $('#password');
+            var $facebookBtn = $('#facebook-btn');
+            var $githubbtn = $('#github-btn');
+            var $googlebtn = $('#google-btn');
+            var $loginWrap = $('#login-wrap');
+            var $contentWrap = $('#content-wrap');
 
-            $nickForm.submit(function(e){
-                e.preventDefault();
-                $nickname.val().split(' ');
-                var cleanName = $nickname.val().split(' ');
-                var cleanerName = cleanName.join("_");
-                console.log('cleanedName is: ', cleanerName);
-                socket.emit('new user' , cleanerName, function(data){//nickname is the name passed in through the #nickBox input
-                    if(data){
-                        $('#nickWrap').hide();
-                        $('#contentWrap').show();
-                        console.log("index.html line 76 data is: " , data);
+
+            // Google authentication and user creation
+            $googlebtn.click(function(){
+                ref.authWithOAuthPopup("google", function(error, authData) {
+                    if (error) {
+                        console.log("Login Failed!", error);
                     } else {
-                        $nickError.html("That username is spoken for and data is: " , data);
+                        console.log("Authenticated successfully with payload:", authData);
+                        var newUser = usersRef.push();
+                        newUser.set({
+                            userInfoSrc: authData.provider,
+                            name: authData.google.displayName
+                        });
+                        // add socket event to trigger index.html here...
+                        var authenticUser = {
+                            name: authData.google.displayName,
+                            userInfoSrc: authData.provider
+                        };
+                        socket.emit('successful login', authenticUser, function(data){
+                            console.log('successful login data: ' +data+ 'authenticUser: ' +authenticUser);
+                        });
+                        $loginWrap.hide();
+                        $contentWrap.show();
                     }
                 });
-                $nickBox.val("");
             });
+
+            // Github authentication and user creation
+            $githubbtn.click(function(){
+                ref.authWithOAuthPopup("github", function(error, authData) {
+                    if (error) {
+                        console.log("Login Failed!", error);
+                    } else {
+                        console.log("Authenticated successfully with payload:", authData);
+                        var newUser = usersRef.push();
+                        newUser.set({
+                            userInfoSrc: authData.provider,
+                            name: authData.github.displayName
+                        });
+                    }
+                });
+            });
+
+            // facebook authentication and user creation
+            $facebookBtn.click(function(){
+                ref.authWithOAuthPopup("facebook", function(error, authData) {
+                    if (error) {
+                        console.log("Login Failed!", error);
+                    } else {
+                        console.log("Authenticated successfully with payload:", authData);
+                        var newUser = usersRef.push();
+                        newUser.set({
+                            userInfoSrc: authData.provider,
+                            name: authData.facebook.displayName
+                        });
+
+                    }
+                });
+
+                // Email password user creation/login
+                $loginForm.submit(function(e){
+                    var newUser = usersRef.push();// Pushing to the existing ref.child('users') creates a new user child everytime this form is submitted whereas if we were to use usersRef.set() we would be overidding the user child everytime
+                    newUser.set({
+                        username: $username.val(),
+                        password: $password.val()
+                    });
+                    console.log('username: ' +username+ 'password: ' + password);
+                });
+            });
+
 
             socket.on('usernames' , function(data){
                 console.log('getting nicknames: ' , data);
@@ -149,19 +186,19 @@
                 $chat.append("<span class='msg'><b>" + data.nick + ": </b>" + data.msg + "</span></br>");
 
                 //push message to firebase
-                fireBaseRef.push({name: data.nick, text: data.msg, timestamp: Date.now()});
+                ref.push({name: data.nick, text: data.msg, timestamp: Date.now()});
             });
 
             socket.on('whisper' , function(data){
                 $chat.append("<span class='whisper'><br>" + data.nick + " </b>" + "whispers:  " + data.msg + " </span></br>");
 
                 //push message to firebase
-                fireBaseRef.push({name: data.nick, whisper: data.msg, timestamp: Date.now()});
+                ref.push({name: data.nick, whisper: data.msg, timestamp: Date.now()});
             });
 
             socket.on('disconnect', function(data){
                 //push disconnect event to firebase
-                fireBaseRef.push({name: data.nick, disconnect: data.disconnect});
+                ref.push({name: data.nick, disconnect: data.disconnect});
                 $chat.text('client disconnected');
             });
         });
