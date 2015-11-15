@@ -101,7 +101,6 @@
         $(function($){
             var socket = io.connect();
             var $chatBtn = $('#btn-chat');
-            var $messageForm = $('#send-message');
             var $messageBox = $('#message');
             var $chat = $('.chat');
             var $users = $('#users');
@@ -140,7 +139,7 @@
                             picture: authData.google.profileImageURL
                         };
                         socket.emit('successful login', authenticUser, function(data){
-                            console.log('successful login data: ' +data+ 'authenticUser: ' +authenticUser);
+                            console.log('successful login data: ' +data+ 'authenticUser: ' +authenticUser.name);
                         });
                         $loginWrap.hide();
                         $contentWrap.show();

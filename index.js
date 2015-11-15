@@ -10,11 +10,9 @@ server.listen(3000);
 
 app.get('*', function(req, res){
     var requestedPage = __dirname + req.path;
-    console.log('req is ',requestedPage);
     fs.stat(requestedPage, function(err, stat){
         if(err == null){
-            console.log('file exists ');
-            console.log('requestedPage: ',requestedPage);
+            //console.log('requestedPage: ',requestedPage);
             res.sendfile(requestedPage);
         }else if(err.code == 'ENOENT'){
             res.send("<h1>Error: " + res.statusCode + res.statusMessage + '</h1>');
@@ -22,7 +20,6 @@ app.get('*', function(req, res){
             console.log('Some other error: ', err.code);
         }
     });
-    //res.sendfile(__dirname + '/index.html');
 });
 
 
@@ -37,10 +34,9 @@ io.sockets.on('connection' , function(socket){
                 callback(true);
                 socket.user = user;
                 users[socket.user] = socket;
+                console.log('socket user is ', socket.user);
                 updateUsers();
-                console.log('index.js line 16, logged users: ', Object.keys(users.socket).length + " new user: " + socket.user.name);
             }
-            updateUsers();
         });
 
     function updateUsers(){// Updates users as they are created and when a user disconnects
@@ -48,6 +44,7 @@ io.sockets.on('connection' , function(socket){
     }
 
     socket.on('send message' , function(msg, callback){
+        console.log('msg is ', msg);
         var msg = msg.trim();
         if(msg.substr(0,2) ==='/w'){
             msg = msg.substr(3);
@@ -75,9 +72,9 @@ io.sockets.on('connection' , function(socket){
 
     socket.on('disconnect' , function(data){
         if(!socket.user) return;
-        io.sockets.emit('disconnect' , {user: socket.user, disconnect: Date.now()});
-        delete users[socket.user];
-        console.log(socket.user + ' has disconnected');
+        io.sockets.emit('disconnect' , {user: socket.user.name, disconnect: Date.now()});
+        delete users[socket];
+        console.log(socket.user.name + ' has disconnected');
         updateUsers();
     });
 });
