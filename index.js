@@ -14,7 +14,6 @@ app.get('*', function(req, res){
     fs.stat(requestedPage, function(err, stat){
         if(err == null){
             console.log('file exists ');
-            console.log('res: ',res);
             console.log('requestedPage: ',requestedPage);
             res.sendfile(requestedPage);
         }else if(err.code == 'ENOENT'){
@@ -28,34 +27,21 @@ app.get('*', function(req, res){
 
 
 io.sockets.on('connection' , function(socket){
-    socket.on('new user' , function(name, callback){
-        if (name in users){
-            callback(false);
-        } else {
-            callback(true);
-            socket.nickname = name;
-            users[socket.nickname] = socket;
-            //io.sockets.emit('new message' , {nick: socket.nickname, msg: "has connected :)"});
+        // Google authentication event
+        socket.on('successful login', function(user, callback){
+            console.log('serverside successful login name: ', user);
+            var username = user.name;
+            if (username in users){
+                callback(false);
+            } else {
+                callback(true);
+                socket.user = user;
+                users[socket.user] = socket;
+                updateUsers();
+                console.log('index.js line 16, logged users: ', Object.keys(users.socket).length + " new user: " + socket.user.name);
+            }
             updateUsers();
-            console.log('index.js line 16, logged users: ', Object.keys(users).length + " new user: " + name);
-        }
-    });
-
-    // Google authentication event
-    socket.on('successful login', function(name, callback){
-        console.log('serverside successful login name: ', name);
-        var user = name.name;
-        if (user in users){
-            callback(false);
-        } else {
-            callback(true);
-            socket.nickname = user;
-            users[socket.nickname] = socket;
-            //io.sockets.emit('new message' , {nick: socket.nickname, msg: "has connected :)"});
-            updateUsers();
-            console.log('index.js line 16, logged users: ', Object.keys(users).length + " new user: " + name);
-        }
-    });
+        });
 
     function updateUsers(){// Updates users as they are created and when a user disconnects
         io.sockets.emit('usernames' , Object.keys(users));
@@ -71,7 +57,7 @@ io.sockets.on('connection' , function(socket){
                 var msg = msg.substr(index + 1);
                 if(name in users){
                     console.log("Whisper was sent!");
-                    users[name].emit('whisper' ,{msg: msg, nick: socket.nickname});
+                    users[name].emit('whisper' ,{msg: msg, user: socket.user});
                 } else {
                     callback('Error invalid user!');
                 }
@@ -81,19 +67,17 @@ io.sockets.on('connection' , function(socket){
             }
 
         } else {
-            io.sockets.emit('new message' ,{msg: msg, nick: socket.nickname});
+            io.sockets.emit('new message' ,{msg: msg, user: socket.user.name, picture: socket.user.picture});
+            console.log('socket.picture is ', socket.user.picture);
         }
     });
-
-    //socket.on('message' , function(msg){
-    //    io.socket.emit('new message' , msg);
-    //});
+    
 
     socket.on('disconnect' , function(data){
-        if(!socket.nickname) return;
-        io.sockets.emit('disconnect' , {nick: socket.nickname, disconnect: Date.now()});
-        delete users[socket.nickname];
-        console.log(socket.nickname + ' has disconnected');
+        if(!socket.user) return;
+        io.sockets.emit('disconnect' , {user: socket.user, disconnect: Date.now()});
+        delete users[socket.user];
+        console.log(socket.user + ' has disconnected');
         updateUsers();
     });
 });

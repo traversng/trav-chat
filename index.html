@@ -27,52 +27,72 @@
                 <hr class="hr-or">
                 <span class="span-or">or</span>
             </div>
-                <form id="login-form" role="form" method="post" action="/login">
-                    <div class="form-group">
-                        <label for="usernameEmail">Username or email</label>
-                        <input type="text" class="form-control" id="usernameEmail">
+            <form id="login-form" role="form" method="post"><!--=== Login Form ===-->
+                <div class="form-group">
+                    <label for="usernameEmail">Username or email</label>
+                    <input type="text" class="form-control" id="usernameEmail">
+                </div>
+                <div class="form-group">
+                    <a class="pull-right" href="#">Forgot password?</a>
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password">
+                </div>
+                <div class="checkbox pull-right">
+                    <label>
+                        <input type="checkbox">
+                        Remember me </label>
+                </div>
+                <button type="submit" class="btn btn btn-primary">
+                    Log In
+                </button>
+            </form><!-- login-form -->
+        </div><!-- main -->
+    </div><!-- row -->
+</div><!-- login-wrap -->
+<div id="content-wrap">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-5">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <span class="glyphicon glyphicon-comment"></span> Chat
+                        <div class="btn-group pull-right">
+                            <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                                <span class="glyphicon glyphicon-chevron-down"></span>
+                            </button>
+                            <ul class="dropdown-menu slidedown">
+                                <li><a href="http://www.jquery2dotnet.com"><span class="glyphicon glyphicon-refresh">
+                            </span>Refresh</a></li>
+                                <li><a href="http://www.jquery2dotnet.com"><span class="glyphicon glyphicon-ok-sign">
+                            </span>Available</a></li>
+                                <li><a href="http://www.jquery2dotnet.com"><span class="glyphicon glyphicon-remove">
+                            </span>Busy</a></li>
+                                <li><a href="http://www.jquery2dotnet.com"><span class="glyphicon glyphicon-time"></span>
+                                    Away</a></li>
+                                <li class="divider"></li>
+                                <li><a href="http://www.jquery2dotnet.com"><span class="glyphicon glyphicon-off"></span>
+                                    Sign Out</a></li>
+                            </ul>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <a class="pull-right" href="#">Forgot password?</a>
-                        <label for="password">Password</label>
-                        <input type="password" class="form-control" id="password">
+                    <div class="panel-body">
+                        <ul class="chat">
+                           <!-- Chat text appends here -->
+                        </ul>
                     </div>
-                    <div class="checkbox pull-right">
-                        <label>
-                            <input type="checkbox">
-                            Remember me </label>
+                    <div class="panel-footer">
+                        <div class="input-group">
+                            <input id="message" type="text" class="form-control input-sm" placeholder="Type your message here..." />
+                        <span class="input-group-btn">
+                            <button class="btn btn-warning btn-sm" id="btn-chat">
+                                Send</button>
+                        </span>
+                        </div>
                     </div>
-                    <button type="submit" class="btn btn btn-primary">
-                        Log In
-                    </button>
-                </form><!-- login-form -->
+                </div>
             </div>
         </div>
     </div>
-</div>
-<!--<div id="nickWrap"> ================== Adding Social User Authentication ====================-->
-    <!--<p>Enter a username:</p>-->
-    <!--<p id="nickError"></p>-->
-    <!--<form id="setNick" class="form">-->
-        <!--<div class="form-group">-->
-            <!--<input class="form-inline" id="nickname" size="35" />-->
-            <!--<input class="form btn btn-success" type="submit"/>-->
-        <!--</div>-->
-    <!--</form>-->
-<!--</div>-->
-<div id="content-wrap">
-    <div id="chat-wrap">
-        <div id="chat">
-            <!-- Messages are appended here -->
-        </div>
-        <form id="send-message">
-            <input id="message" size="35"/>
-            <input class="btn btn-success" type="submit"/>
-        </form>
-    </div>
-</div>
-
-<div id="users">
 </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
@@ -80,12 +100,14 @@
     <script>
         $(function($){
             var socket = io.connect();
+            var $chatBtn = $('#btn-chat');
             var $messageForm = $('#send-message');
             var $messageBox = $('#message');
-            var $chat = $('#chat');
+            var $chat = $('.chat');
             var $users = $('#users');
             var ref = new Firebase('https://travcast.firebaseio.com');//This creates a connection to our unique firebase db
             var usersRef = ref.child("users");//Creates and uses a database child called users...this is where we will store our users information
+            var conversationRef = ref.child("conversation");
             var $username = $('#usernameEmail');
             var $password = $('#password');
             var $facebookBtn = $('#facebook-btn');
@@ -93,7 +115,10 @@
             var $googlebtn = $('#google-btn');
             var $loginWrap = $('#login-wrap');
             var $contentWrap = $('#content-wrap');
+            var $loginForm = $('#login-form');
 
+            // Hide the chat ui by default
+            $contentWrap.hide();
 
             // Google authentication and user creation
             $googlebtn.click(function(){
@@ -105,18 +130,21 @@
                         var newUser = usersRef.push();
                         newUser.set({
                             userInfoSrc: authData.provider,
-                            name: authData.google.displayName
+                            name: authData.google.displayName,
+                            picture: authData.google.profileImageURL
                         });
                         // add socket event to trigger index.html here...
                         var authenticUser = {
                             name: authData.google.displayName,
-                            userInfoSrc: authData.provider
+                            userInfoSrc: authData.provider,
+                            picture: authData.google.profileImageURL
                         };
                         socket.emit('successful login', authenticUser, function(data){
                             console.log('successful login data: ' +data+ 'authenticUser: ' +authenticUser);
                         });
                         $loginWrap.hide();
                         $contentWrap.show();
+                        $messageBox.focus();
                     }
                 });
             });
@@ -133,6 +161,18 @@
                             userInfoSrc: authData.provider,
                             name: authData.github.displayName
                         });
+                        // add socket event to trigger index.html here...
+                        var authenticUser = {
+                            name: authData.github.displayName,
+                            userInfoSrc: authData.provider,
+                            picture: authData.github.profileImageURL
+                        };
+                        socket.emit('successful login', authenticUser, function(data){
+                            console.log('successful login data: ' +data+ 'authenticUser: ' +authenticUser);
+                        });
+                        $loginWrap.hide();
+                        $contentWrap.show();
+                        $messageBox.focus();
                     }
                 });
             });
@@ -149,7 +189,18 @@
                             userInfoSrc: authData.provider,
                             name: authData.facebook.displayName
                         });
-
+                        // add socket event to trigger index.html here...
+                        var authenticUser = {
+                            name: authData.facebook.displayName,
+                            userInfoSrc: authData.provider,
+                            picture: authData.facebook.profileImageURL
+                        };
+                        socket.emit('successful login', authenticUser, function(data){
+                            console.log('successful login data: ' +data+ 'authenticUser: ' +authenticUser);
+                        });
+                        $loginWrap.hide();
+                        $contentWrap.show();
+                        $messageBox.focus();
                     }
                 });
 
@@ -160,13 +211,23 @@
                         username: $username.val(),
                         password: $password.val()
                     });
+                    var authenticUser = {
+                        username: $username.val(),
+                        password: $password.val()
+                    };
+                    socket.emit('successful login', authenticUser, function(data){
+                        console.log('successful login data: ' +data+ 'authenticUser: ' +authenticUser);
+                    });
+                    $loginWrap.hide();
+                    $contentWrap.show();
+                    $messageBox.focus();
                     console.log('username: ' +username+ 'password: ' + password);
                 });
             });
 
 
             socket.on('usernames' , function(data){
-                console.log('getting nicknames: ' , data);
+                console.log('getting usernames: ' , data);
                 var html = "";
                 for(var i = 0; i < data.length; i++){
                     html +="<span onclick=" + "whisperName(this,'/w')" + ">" + data[i] + "</span></br>";
@@ -174,7 +235,7 @@
                 $users.html(html);
             });
 
-            $messageForm.submit(function(e){
+            $chatBtn.click(function(e){
                 e.preventDefault();
                 socket.emit('send message', $messageBox.val(), function(data){
                     $chat.append("<span class='error'><b>" + data + "</span></br>");
@@ -183,22 +244,56 @@
             });
 
             socket.on('new message' , function(data){
-                $chat.append("<span class='msg'><b>" + data.nick + ": </b>" + data.msg + "</span></br>");
+                // Create the chat elements with jquery
+                var li = $('<li>',{
+                    class: 'left clearfix',
+                });
+                var span = $('<span>',{
+                    class: 'chat-img pull-left',
+                    alt: 'User Avatar'
+                });
+                var strong = $('<strong>',{
+                    class: 'primary-font',
+                    text: data.user
+                });
+                var userImg = $('<img>',{
+                    src: data.picture,
+                    class: 'chat-img'
+                });
+                var chatDiv = $('<div>',{
+                    class:'chat-body clearfix'
+                });
+                var chatDivHeader = $('<div>',{
+                    class: 'header'
+                });
+                var chatText = $('<p>',{
+                    text: data.msg
+                });
+                $(span).append(userImg);
+                $(chatDivHeader).append(strong);
+                $(chatDiv).append(chatDivHeader,chatText);
+                $(li).append(span, chatDiv);
+                $chat.append(li);
+
 
                 //push message to firebase
-                ref.push({name: data.nick, text: data.msg, timestamp: Date.now()});
+                conversationRef.push({
+                    name: data.user,
+                    text: data.msg,
+                    timestamp: Date.now()
+                });
             });
 
             socket.on('whisper' , function(data){
-                $chat.append("<span class='whisper'><br>" + data.nick + " </b>" + "whispers:  " + data.msg + " </span></br>");
+                $chat.append("<span class='whisper'><br>" + data.user + " </b>" + "whispers:  " + data.msg + " </span></br>");
 
                 //push message to firebase
-                ref.push({name: data.nick, whisper: data.msg, timestamp: Date.now()});
+                ref.push({name: data.user, whisper: data.msg, timestamp: Date.now()});
             });
 
             socket.on('disconnect', function(data){
                 //push disconnect event to firebase
-                ref.push({name: data.nick, disconnect: data.disconnect});
+                ref.push({name: data.user, disconnect: data.disconnect});
                 $chat.text('client disconnected');
             });
         });
