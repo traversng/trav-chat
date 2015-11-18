@@ -93,12 +93,17 @@ $(function($){
         $users.html(html);
     });
 
-    $chatBtn.click(function(e){
-        e.preventDefault();
-        socket.emit('send message', $messageBox.val(), function(data){
-            $chat.append("<span class='error'><b>" + data + "</span></br>");
-        });
-        $messageBox.val("");
+    $messageBox.keypress(function(e){
+        var key = e.which;
+        if(key == 13){
+            socket.emit('send message', $messageBox.val(), function(data){
+                $chat.append("<span class='error'><b>" + data + "</span></br>");
+            });
+            $messageBox.val("");
+        }
+        $chat.animate({
+            scrollTop: $('.chat li:last-child').offset().top + 'px'
+        }, 1000);
     });
 
     // Chat item DOM creation
