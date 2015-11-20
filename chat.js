@@ -101,13 +101,11 @@ $(function($){
             });
             $messageBox.val("");
         }
-        $chat.animate({
-            scrollTop: $('.chat li:last-child').offset().top + 'px'
-        }, 1000);
     });
 
     // Chat item DOM creation
     var ChatItem = function(data){
+        var height = $chat.height();
         var li = $('<li>',{
             class: 'left clearfix'
         });
@@ -138,6 +136,8 @@ $(function($){
         $(chatDiv).append(chatDivHeader,chatText);
         $(li).append(span, chatDiv);
         $chat.append(li);
+        $('.panel-body').animate({scrollTop: height}, 1000);
+        height += $('panel-body');
     };
 
     // Append new messages to the DOM

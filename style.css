@@ -157,8 +157,8 @@ h3 {
 
 .panel-body
 {
-    overflow-y: scroll;
-    height: 60vh;
+    overflow-y: auto;
+    height: 80vh;
 }
 
 ::-webkit-scrollbar-track
