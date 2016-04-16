@@ -65,7 +65,7 @@ $(function($){
     });
 
     // Email password user creation/login
-    $loginForm.submit(function(e){
+    $loginForm.submit(function(){
         var newUser = usersRef.push();// Pushing to the existing ref.child('users') creates a new user child everytime this form is submitted whereas if we were to use usersRef.set() we would be overidding the user child everytime
         newUser.set({
             username: $username.val(),
