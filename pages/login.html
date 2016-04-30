@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Trav Chat Login</title>
+</head>
+<body>
+	<div id="login-wrap">
+    <div class="row">
+        <div class="main">
+            <h3>Please Log In, or <a href="#">Sign Up</a></h3>
+            <div class="row">
+                <a id="facebook-btn" class="btn btn-block btn-social btn-facebook">
+                    <span class="fa fa-facebook"></span> Sign in with Facebook
+                </a>
+                <a id="google-btn" class="btn btn-block btn-social btn-google">
+                    <span class="fa fa-google"></span> Sign in with Google
+                </a>
+                <a id="github-btn" class="btn btn-block btn-social btn-github">
+                    <span class="fa fa-github"></span> Sign in with GitHub
+                </a>
+            </div>
+            <div class="login-or">
+                <hr class="hr-or">
+                <span class="span-or">or</span>
+            </div>
+            <form id="login-form" role="form" method="post"><!--=== Login Form ===-->
+                <div class="form-group">
+                    <label for="usernameEmail">Username or email</label>
+                    <input type="text" class="form-control" id="usernameEmail">
+                </div>
+                <div class="form-group">
+                    <a class="pull-right" href="#">Forgot password?</a>
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password">
+                </div>
+                <div class="checkbox pull-right">
+                    <label>
+                        <input type="checkbox">
+                        Remember me </label>
+                </div>
+                <button type="submit" class="btn btn btn-primary">
+                    Log In
+                </button>
+            </form><!-- login-form -->
+        </div><!-- main -->
+    </div><!-- row -->
+</div><!-- login-wrap -->
+</body>
+</html>

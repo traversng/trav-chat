@@ -10,6 +10,7 @@ server.listen(3000);
 
 app.get('*', function(req, res){
     var requestedPage = __dirname + req.path;
+    console.log('requestedPage: ', requestedPage );
     fs.stat(requestedPage, function(err, stat){
         if(err == null){
             //console.log('requestedPage: ',requestedPage);
@@ -24,6 +25,8 @@ app.get('*', function(req, res){
 
 
 io.sockets.on('connection' , function(socket){
+    console.log('socket in connection event');
+    console.log(socket);
         // Google authentication event
         socket.on('successful login', function(user, callback){
             console.log('serverside successful login name: ', user);
@@ -56,7 +59,7 @@ io.sockets.on('connection' , function(socket){
                     console.log("Whisper was sent!");
                     users[name].emit('whisper' ,{msg: msg, user: socket.user});
                 } else {
-                    callback('Error invalid user!');
+                    callback('Error invalid user! name is ' + name);
                 }
 
             } else {
