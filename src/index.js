@@ -1,13 +1,17 @@
-import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-import LoginWrap from './components/login/loginWrap';
+import React, { Component } from 'react'
+import ReactDOM from 'react-dom'
+import { Router, Route, IndexRoute, hashHistory } from 'react-router'
+import LoginWrap from './components/login/loginWrap' //<LoginWrap />
+import ChatApp from './components/chat-components/chatApp' 
 
 const App = () => {
-	return (
+	return(
 		<div>
-			<LoginWrap />
+			<ChatApp />
 		</div>
-	);
+	)
 }
 
-ReactDOM.render( <App />, document.querySelector('.container') );
+ReactDOM.render( 
+	<App />, 
+	document.querySelector('.container') );
