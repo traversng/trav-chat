@@ -2,30 +2,31 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { connect, Provider } from 'react-redux'
 import { createStore, combineReducers, applyMiddleware, bindActionCreators } from 'redux'
-import { Router, Route, IndexRoute, hashHistory } from 'react-router'
 
 // ================ ACTIONS ================== //
+let chatItemId = 0
 const newChatItem = ( chatString ) => {
 	console.log('new chat string: ' + chatString);
-	return store.dispatch({
+	return {
+		id: chatItemId++,
 		type: 'ADD_CHAT_ITEM',
 		text: chatString
-	})
+	}
 }
 
 
 // ================ REDUCERS ================= // 
 
 const chatItemReducer = (state = '', action) => {
-	console.log('state in chatItemReducer: ', state)
+	console.log('action in chatItemReducer: ', action + ' state in chatItemReducer: ', state)
 	switch(action.type) {
 		case 'ADD_CHAT_ITEM':
 		return {
-			id: state.length + 1,
+			id: action.id,
 			text: action.text.trim()
 		}
+		default: return state;
 	}
-	return state
 }
 
 const chatListReducer = (state = [], action) => {
@@ -36,30 +37,27 @@ const chatListReducer = (state = [], action) => {
 			...state,
 			chatItemReducer(state, action)
 		]
+		default: return state;
 	}
-	return state
 }
 
 // ================== COMBINE REDUCERS ============ //
-
-const chatApp = combineReducers({ 
-	
-	// The keys of the reducers (activePhrase, removedPhrase) will be available on the state object
+const chatApp = combineReducers({ 	
+	// The keys of the reducers (chatItem, ) will be available on the state object
 	chatItem: chatItemReducer,
 	chatList: chatListReducer
-
 });
 
 // ================== MIDDLEWARE ================= //
 
-const actionLogger = ({ dispatch, getState }) => 
-	(next) => (action) => {
-		console.log('Will dispatch: ', action);
-		console.log('current state: ', getState());
-		console.log('next state: ', getState(next(action)));
-		return next(action);
-} 
-const middleWare = applyMiddleware(actionLogger)
+// const actionLogger = ({ dispatch, getState }) => 
+// 	(next) => (action) => {
+// 		console.log('Will dispatch: ', action);
+// 		console.log('current state: ', getState());
+// 		console.log('next state: ', getState(next(action)));
+// 		return next(action);
+// } 
+// const middleWare = applyMiddleware(actionLogger)
 
 // ================ LOGIN COMPONENTS ================ // 
 
@@ -110,31 +108,32 @@ class LoginWrap extends Component {
 
 // ================ CHAT COMPONENTS ================= // 
 
-const ChatItem = () => {
+const ChatItem = ( item ) => {
+	console.log('in ChatItem store: ', item);
 	return (
-		<li>{ props.chatItem.text }</li>
+		<li>{ item.text }</li>
 	)
 }
 
 const ChatList = () => {
-	let chatItems = store.getState()
-	console.log('store in PhraseList: ', store.getState())
+	let chatList = store.getState().chatList
+	console.log('chatlist in ChatList: ', chatList)
 	return(
 	<ul>
-    	{ chatItems.map( (chatItem) => <ChatItem key={ chatItem.id } text={ chatItem.text }/> ) }
+    	{ chatList.map( (item) => <ChatItem key={ item.id } text={ item.text }/> ) }
   	</ul>
   	)
 }
 
 
-class ChatBar extends Component {
-	render() {
-		let input
-		console.log('store in ChatBar: ', store);
-		return(
+let NewChatItem = () =>  {
+	let input
+	console.log('store in ChatBar: ', store);
+	return(
+		<div>
 			<form onSubmit={ e => {
 				e.preventDefault()
-				newChatItem( input.value )
+				store.dispatch(newChatItem(input.value))
 				input.value = ''
 			} }>
 				<div className="row">
@@ -150,32 +149,26 @@ class ChatBar extends Component {
 					</div>
   				</div>
 			</form>
-		)
-	}
+		</div>
+	)
 }
 
-class ChatBody extends Component {
+class App extends Component {
 	render() {
-		return (
+		return(
 			<div>
-				<ChatBar />
+				<ChatList />
+				<NewChatItem />
 			</div>
 		)
 	}
 }
-
-class ChatContainerComponent extends Component {
-	render() {
-		return(
-			<ChatBody props={ store }/>
-		)
-	}
-}
 	
-const store = createStore(chatApp, middleWare);
+const store = createStore(chatApp);
+store.dispatch(newChatItem('Initial Chat Item Yall'))
 
 ReactDOM.render( 
 	<Provider store={ store } >
-		<ChatContainerComponent />
+		<App { ...bindActionCreators( newChatItem , store.dispatch) }/>
 	</Provider>, 
 	document.querySelector('.container') );
