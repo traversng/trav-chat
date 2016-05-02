@@ -131,7 +131,10 @@ let NewChatItem = () =>  {
 	console.log('store in ChatBar: ', store);
 	return(
 		<div>
-			<form onSubmit={ e => {
+			<form 
+				id="chat-form" 
+				className="navbar-fixed-bottom"
+				onSubmit={ e => {
 				e.preventDefault()
 				store.dispatch(newChatItem(input.value))
 				input.value = ''
