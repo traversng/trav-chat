@@ -42,7 +42,6 @@ const chatListReducer = (state = [], action) => {
 }
 
 // ================== COMBINE REDUCERS ============ //
-
 const chatApp = combineReducers({ 	
 	// The keys of the reducers (chatItem, ) will be available on the state object
 	chatItem: chatItemReducer,
@@ -51,14 +50,14 @@ const chatApp = combineReducers({
 
 // ================== MIDDLEWARE ================= //
 
-const actionLogger = ({ dispatch, getState }) => 
-	(next) => (action) => {
-		console.log('Will dispatch: ', action);
-		console.log('current state: ', getState());
-		console.log('next state: ', getState(next(action)));
-		return next(action);
-} 
-const middleWare = applyMiddleware(actionLogger)
+// const actionLogger = ({ dispatch, getState }) => 
+// 	(next) => (action) => {
+// 		console.log('Will dispatch: ', action);
+// 		console.log('current state: ', getState());
+// 		console.log('next state: ', getState(next(action)));
+// 		return next(action);
+// } 
+// const middleWare = applyMiddleware(actionLogger)
 
 // ================ LOGIN COMPONENTS ================ // 
 
@@ -165,7 +164,7 @@ class App extends Component {
 	}
 }
 	
-const store = createStore(chatApp, middleWare);
+const store = createStore(chatApp);
 store.dispatch(newChatItem('Initial Chat Item Yall'))
 
 ReactDOM.render( 
