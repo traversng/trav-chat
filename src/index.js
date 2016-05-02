@@ -108,10 +108,10 @@ class LoginWrap extends Component {
 
 // ================ CHAT COMPONENTS ================= // 
 
-const ChatItem = ( item ) => {
-	console.log('in ChatItem store: ', item);
+const ChatItem = ( text ) => {
+	console.log('in ChatItem store props: ', text);
 	return (
-		<li>{ item.text }</li>
+		<li>{ text.text }</li>
 	)
 }
 
@@ -166,9 +166,13 @@ class App extends Component {
 	
 const store = createStore(chatApp);
 store.dispatch(newChatItem('Initial Chat Item Yall'))
+const render = () => {
+	ReactDOM.render( 
+		<Provider store={ store } >
+			<App { ...bindActionCreators( newChatItem, store.dispatch) }/>
+		</Provider>, 
+		document.querySelector('.container') );
+}
+render()
+store.subscribe(render)
 
-ReactDOM.render( 
-	<Provider store={ store } >
-		<App { ...bindActionCreators( newChatItem , store.dispatch) }/>
-	</Provider>, 
-	document.querySelector('.container') );
