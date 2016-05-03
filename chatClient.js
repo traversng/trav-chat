@@ -17,7 +17,7 @@ $(function($){
     var $loginForm = $('#login-form');
 
     // Hide the chat ui by default
-    $contentWrap.hide();
+    $contentWrap.hide();*
 
     // Social Authentication
     var SocialAuthentication = function(socialNetwork){
