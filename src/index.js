@@ -133,14 +133,14 @@ let NewChatItem = () =>  {
 		<div>
 			<form 
 				id="chat-form" 
-				className="navbar-fixed-bottom"
+				className="input-group"
 				onSubmit={ e => {
 				e.preventDefault()
 				store.dispatch(newChatItem(input.value))
 				input.value = ''
 			} }>
 				<div className="row">
-  					<div className="col-lg-6">
+  					<div className="col-xs-12">
     					<div className="input-group">
       						<input ref={ node => {
       							input = node
@@ -159,9 +159,16 @@ let NewChatItem = () =>  {
 class App extends Component {
 	render() {
 		return(
-			<div>
-				<ChatList />
-				<NewChatItem />
+			<div id="chat-container" className="panel panel-default">
+				<div className="panel-heading">
+					<h3>Trav Cast</h3>
+				</div>
+				<div className="panel-body">
+					<ChatList />
+				</div>
+				<div className="panel-footer">
+					<NewChatItem />
+				</div>
 			</div>
 		)
 	}
