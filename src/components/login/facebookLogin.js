@@ -12,7 +12,7 @@ class FaceBookLoginBtn extends Component {
 	render() {
 		return(
 			<a 
-			onClick={ this.handleClick('facebook') }
+			onClick={ this.handleClick.bind(null,'facebook') }
 			id="facebook-btn" 
 			className="btn btn-block btn-social btn-facebook">
 	            <span className="fa fa-facebook"></span> Sign in with Facebook 

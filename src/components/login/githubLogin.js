@@ -11,7 +11,7 @@ class GithubLoginBtn extends Component {
 	render() {
 		return(
 			<a
-			onClick={ this.handleClick('github') } 
+			onClick={ this.handleClick.bind(null,'github') } 
 			id="github-btn" 
 			className="btn btn-block btn-social btn-github">
             	<span className="fa fa-github"></span> Sign in with GitHub

@@ -2,3 +2,22 @@
     overflow-y: scroll;
     height: 80vh;
 }
+
+.jumbotron {
+	margin-top: 15%;
+}
+
+#github-btn{
+    background-color: #444444;
+    color: white;
+}
+
+#google-btn{
+    background-color: #DD4B39;
+    color: white;
+}
+
+#facebook-btn{
+    background-color: #3B5998;
+    color: white;
+}

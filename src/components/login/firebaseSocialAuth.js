@@ -9,8 +9,8 @@ const SocialAuthentication = ( socialNetwork ) => {
             console.log("Login Failed!", error);
         } else {
             console.log("Authenticated successfully with payload:", authData);
-            console.log('socialNetwork is :', typeof socialNetwork);
-            var newUser = usersRef.push();
+            console.log('socialNetwork is :', socialNetwork);
+            let newUser = usersRef.push();
             newUser.set({
                 name: authData[socialNetwork].displayName,
                 userInfoSrc: authData.provider,
