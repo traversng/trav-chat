@@ -36,38 +36,9 @@ import chatApp from './reducers/chatReducer'
 // ================ CHAT COMPONENTS ================= // 
 import ChatItem from './components/chat-components/chatItem'
 import ChatList from './containers/chatList'
+
+// ================ CHAT CONTAINERS ================= // 
 import App from './containers/chatContainer'
-
-
-let NewChatItem = () =>  {
-	let input
-	console.log('store in ChatBar: ', store);
-	return(
-		<div>
-			<form 
-				id="chat-form" 
-				className="input-group"
-				onSubmit={ e => {
-				e.preventDefault()
-				store.dispatch(actionNewChatItem(input.value))
-				input.value = ''
-			} }>
-				<div className="row">
-  					<div className="col-xs-12">
-    					<div className="input-group">
-      						<input ref={ node => {
-      							input = node
-      						}} type="text" className="form-control" placeholder="Chat away..." />
-      						<span className="input-group-btn">
-        						<button className="btn btn-info" type="submit">Send</button>
-      						</span>
-    					</div>
-					</div>
-  				</div>
-			</form>
-		</div>
-	)
-}
 	
 const store = createStore(chatApp);
 store.dispatch(actionNewChatItem('Initial Chat Item Yall'))

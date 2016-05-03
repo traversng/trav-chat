@@ -1,8 +1,9 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import store from '../index'
 import actionNewChatItem from '../actions/action-new-chat-text'
 
-let NewChatItem = () =>  {
+let NewChatItem = ( store ) =>  {
 	let input
 	console.log('store in ChatBar: ', store);
 	return(
@@ -32,4 +33,12 @@ let NewChatItem = () =>  {
 	)
 }
 
-export default NewChatItem
+const mapDispatchToProps = ( dispatch ) => {
+	return {
+		onNewChatItemClick: ( text ) => {
+			dispatch(actionNewChatItem( text ))
+		}
+	}
+}
+
+export default connect(mapDispatchToProps)(NewChatItem)
