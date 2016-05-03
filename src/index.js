@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
+import { Router, Route, Link } from 'react-router'
 import { connect, Provider } from 'react-redux'
 import { createStore, combineReducers, applyMiddleware, bindActionCreators } from 'redux'
+import router from './router'
 
 // ================ ACTIONS ================== //
 import actionNewChatItem from './actions/action-new-chat-text'
@@ -31,17 +33,10 @@ import chatApp from './reducers/chatReducer'
 
 // ================ LOGIN COMPONENTS ================ // 
 
-
-
-
-
-
-
-
-
 // ================ CHAT COMPONENTS ================= // 
 import ChatItem from './components/chat-components/chatItem'
-import ChatList from './components/chat-components/chatList'
+import ChatList from './containers/chatList'
+import App from './containers/chatContainer'
 
 
 let NewChatItem = () =>  {
@@ -73,34 +68,16 @@ let NewChatItem = () =>  {
 		</div>
 	)
 }
-
-class App extends Component {
-	render() {
-		return(
-			<div id="chat-container" className="panel panel-default">
-				<div className="panel-heading">
-					<h3>Trav Cast</h3>
-				</div>
-				<div className="panel-body">
-					<ChatList />
-				</div>
-				<div className="panel-footer">
-					<NewChatItem />
-				</div>
-			</div>
-		)
-	}
-}
 	
 const store = createStore(chatApp);
 store.dispatch(actionNewChatItem('Initial Chat Item Yall'))
 const render = () => {
-	ReactDOM.render( 
-		<Provider store={ store } >
-			<App { ...bindActionCreators( actionNewChatItem, store.dispatch) }/>
-		</Provider>, 
-		document.querySelector('.container') );
-}
+	ReactDOM.render(
+  	<Provider store={store}>
+  		{router}
+	</Provider>,
+  document.querySelector('.container'));
+ } 
 render()
 store.subscribe(render)
 

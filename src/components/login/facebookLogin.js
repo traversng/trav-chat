@@ -1,3 +1,5 @@
+import React, { Component } from 'react'
+
 class FaceBookLoginBtn extends Component {
 	render() {
 		return(
@@ -7,3 +9,5 @@ class FaceBookLoginBtn extends Component {
 		);
 	}
 };
+
+export default FaceBookLoginBtn

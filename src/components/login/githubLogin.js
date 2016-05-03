@@ -1,3 +1,5 @@
+import React, { Component } from 'react'
+
 class GithubLoginBtn extends Component {
 	render() {
 		return(
@@ -7,3 +9,5 @@ class GithubLoginBtn extends Component {
 		);
 	}
 };
+
+export default GithubLoginBtn

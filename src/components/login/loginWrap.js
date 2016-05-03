@@ -1,4 +1,10 @@
 // LOGIN WRAPPER
+import React, { Component } from 'react'
+import FaceBookLoginBtn from './facebookLogin'
+import GooglePlusLoginBtn from './googlePlusLogin'
+import GithubLoginBtn from './githubLogin'
+
+
 class LoginWrap extends Component {
 	render() {
 		return(
@@ -12,3 +18,5 @@ class LoginWrap extends Component {
 		);
 	}
 };
+
+export default LoginWrap

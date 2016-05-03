@@ -1,3 +1,5 @@
+import React, { Component } from 'react'
+
 class GooglePlusLoginBtn extends Component {
 	render() {
 		return(
@@ -7,3 +9,5 @@ class GooglePlusLoginBtn extends Component {
 		);
 	}
 };
+
+export default GooglePlusLoginBtn
