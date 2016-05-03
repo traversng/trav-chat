@@ -1,3 +1,4 @@
-#chat-form {
-	margin-bottom: 20px;
+.panel-body {
+    overflow-y: scroll;
+    height: 80vh;
 }
