@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import chatItemReducer from '../reducers/reducer-chat-list'
-import store from '../index'
+import store from '../reducers/chatReducer'
 import ChatItem from '../components/chat-components/chatItem'
 
 const ChatList = ( props ) => {

@@ -12,7 +12,6 @@ import actionNewChatItem from './actions/action-new-chat-text'
 import chatApp from './reducers/chatReducer'
 	
 const store = createStore(chatApp);
-store.dispatch(actionNewChatItem('Initial Chat Item Yall'))
 const render = () => {
 	ReactDOM.render(
   	<Provider store={store}>

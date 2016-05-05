@@ -10,11 +10,10 @@ const SocialAuthentication = ( socialNetwork ) => {
         } else {
             console.log("Authenticated successfully with payload:", authData);
             console.log('socialNetwork is :', socialNetwork);
-            let newUser = usersRef.push();
-            newUser.set({
-                name: authData[socialNetwork].displayName,
-                userInfoSrc: authData.provider,
-                picture: authData[socialNetwork].profileImageURL
+            dispatch({
+                type: LOGIN_USER,
+                uid: authData.uid,
+                username: authData.github.displayName || authData.github.username
             });
             // add socket event to trigger index.html here...
             var authenticUser = {
