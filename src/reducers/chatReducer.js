@@ -7,6 +7,7 @@ import actionNewChatItem from '../actions/action-new-chat-text'
 
 const chatApp = combineReducers({ 	
 	// The keys of the reducers (chatItem, ) will be available on the state object
+	user: authReducer,
 	chatItem: chatItemReducer,
 	chatArray: chatListReducer
 });
