@@ -1,3 +1,5 @@
+import Constants from '../constants'
+
 const authReducer = (state, action) => {
 	switch(action.type) {
 		case 'ATTEMPTING_LOGIN':

@@ -1,9 +1,5 @@
 import Firebase from 'firebase'
 import chatItemReducer from './reducer-chat-item'
-
-
-
-
 const Posts = new Firebase('https://travcast.firebaseio.com')
 
 export function fetchPosts() {
