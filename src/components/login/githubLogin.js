@@ -1,12 +1,16 @@
 import React, { Component } from 'react'
 import Firebase from 'firebase'
 import SocialAuthentication from './firebaseSocialAuth'
+import Auth from '../../actions/auth'
+import Constants from '../../constants'
 
-const ref = new Firebase('https://travcast.firebaseio.com')
+const Ref = new Firebase(Constants.FIREBASE)
 
 class GithubLoginBtn extends Component {
 	handleClick = ( socialNetwork ) => {
-		SocialAuthentication( socialNetwork )
+		console.log('social network in google login: ' + socialNetwork)
+		console.log('auth in github login: ', Auth.attemptLogin)
+		Auth.attemptLogin( socialNetwork )
 	}
 	render() {
 		return(

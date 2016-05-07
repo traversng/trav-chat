@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
 import Firebase from 'firebase'
-import SocialAuthentication from './firebaseSocialAuth'
+import Auth from '../../actions/auth'
+import Constants from '../../constants'
 
-const ref = new Firebase('https://travcast.firebaseio.com')
+console.log('in facebook login: ', Constants);
+const Ref = new Firebase(Constants.FIREBASE)
 
 class FaceBookLoginBtn extends Component {
 	handleClick = ( socialNetwork ) => {
-		SocialAuthentication( socialNetwork )
+		Auth.attemptLogin( socialNetwork )
 	}
 
 	render() {
