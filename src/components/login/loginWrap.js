@@ -1,8 +1,10 @@
 // LOGIN WRAPPER
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import FaceBookLoginBtn from './facebookLogin'
 import GooglePlusLoginBtn from './googlePlusLogin'
 import GithubLoginBtn from './githubLogin'
+import Auth from '../../actions/auth'
 
 
 class LoginWrap extends Component {
@@ -19,4 +21,22 @@ class LoginWrap extends Component {
 	}
 };
 
-export default LoginWrap
+const mapStateToProps = ( state ) => {
+	return {
+		auth: state.auth
+	}
+}
+
+const mapDispatchToProps = ( dispatch ) => {
+	return {
+		attempLogin: () => {
+			dispatch( Auth.attempLogin() )
+		},
+
+		userLogout: () => {
+			dispatch( Auth.userLogout() )
+		}
+	};
+}
+
+export default connect( mapDispatchToProps, mapStateToProps )( LoginWrap );

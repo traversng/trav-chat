@@ -5,8 +5,8 @@ import chatApp from '../reducers/chatReducer'
 
 const Ref = new Firebase(Constants.FIREBASE)
 
-const Auth = () => {
-	listenForAuth = ( socialNetwork ) => {
+const Auth = {
+	listenForAuth: ( socialNetwork ) => {
 		return ( dispatch, getState ) => {
 			Ref.onAuth((authData) => {
 				if(authData) {
@@ -23,8 +23,10 @@ const Auth = () => {
 		}
 	},
 
-	attemptLogin = ( socialNetwork ) => {
+	attemptLogin: ( socialNetwork ) => {
 		console.log('in attemptLogin socialNetwork is: ', socialNetwork);
+		return ( dispatch, getState ) => {
+			dispatch({ type: Constants.ATTEMPT_LOGIN })
 			Ref.authWithOAuthPopup(socialNetwork, (error, authData) => {
 				console.log('Ref.authWithOAuthPopup')
 				if(error) {
@@ -40,9 +42,10 @@ const Auth = () => {
 					})
 				}
 			})
+		}	
 	},
 
-	userLogout = () => {
+	userLogout: () => {
 		return ( dispatch, getState ) => {
 			dispatch({ type: Constants.LOGOUT })
 			Ref.unAuth();
@@ -50,8 +53,4 @@ const Auth = () => {
 	}
 }
 
-const mapDispatchToProps = () => {
-	return bindActionCreators( { Auth }, dispatch )
-}
-
-export default connect(mapDispatchToProps)(Auth)
+export default Auth
