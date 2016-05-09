@@ -2,8 +2,8 @@ import Constants from '../constants'
 import Firebase from 'firebase'
 import connect from 'react-redux'
 import store from '../reducers/chatReducer'
-import {Router} from 'react-router'
-
+import { push } from 'react-router-redux'
+import { browserHistory } from 'react-router'
 const Ref = new Firebase(Constants.FIREBASE)
 
 const Auth = (socialNetwork) => {
@@ -21,7 +21,8 @@ const Auth = (socialNetwork) => {
                 username: authData[socialNetwork].displayName,
                 uid: authData.uid,
                 avatar: authData[socialNetwork].profileImageURL
-            }).then( Router.push('/chat') )
+            })
+            browserHistory.push('/chat')
         }
     })
 }
