@@ -7,23 +7,24 @@ const authReducer = (state, action) => {
 		case Constants.ATTEMPTING_LOGIN:
 		console.log('Attempting??');
 		return {
-			status: Constants.AWAITING_AUTH_RESPONSE,
+			type: Constants.AWAITING_AUTH_RESPONSE,
 			username: 'guest',
 			uid: null
 		};
 		case Constants.LOG_OUT:
 		console.log('in LOG_OUT');
 		return {
-			status: Constants.ANONYMOUS,
+			type: Constants.ANONYMOUS,
 			username: 'guest',
 			uid: null
 		};
 		case Constants.LOGIN_USER:
 		console.log('in LOGIN_USER');
 		return {
-			status: Constants.LOGGED_IN,
+			type: Constants.LOGGED_IN,
 			username: action.username,
-			uid: action.uid
+			uid: action.uid,
+			avatar: action.avatar
 		}
 		default: return state || initialState;
 	}

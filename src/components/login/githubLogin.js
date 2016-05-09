@@ -9,8 +9,7 @@ const Ref = new Firebase(Constants.FIREBASE)
 class GithubLoginBtn extends Component {
 	handleClick = ( socialNetwork ) => {
 		console.log('social network in google login: ' + socialNetwork)
-		console.log('auth in github login: ', Auth.attemptLogin)
-		Auth.attemptLogin( socialNetwork )
+		Auth( socialNetwork )
 	}
 	render() {
 		return(
