@@ -8,7 +8,7 @@ const Ref = new Firebase(Constants.FIREBASE)
 
 class FaceBookLoginBtn extends Component {
 	handleClick = ( socialNetwork ) => {
-		Auth.attemptLogin( socialNetwork )
+		Auth( socialNetwork )
 	}
 
 	render() {

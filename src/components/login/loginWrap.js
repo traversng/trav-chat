@@ -9,6 +9,7 @@ import Auth from '../../actions/auth'
 
 class LoginWrap extends Component {
 	render() {
+		let props = this.props
 		return(
 			<div className="jumbotron col-lg-8 col-lg-offset-2">
 				<h1 className="text-center">Trav Chat</h1>
@@ -21,22 +22,5 @@ class LoginWrap extends Component {
 	}
 };
 
-const mapStateToProps = ( state ) => {
-	return {
-		auth: state.auth
-	}
-}
 
-const mapDispatchToProps = ( dispatch ) => {
-	return {
-		attempLogin: () => {
-			dispatch( Auth.attempLogin() )
-		},
-
-		userLogout: () => {
-			dispatch( Auth.userLogout() )
-		}
-	};
-}
-
-export default connect( mapDispatchToProps, mapStateToProps )( LoginWrap );
+export default LoginWrap 

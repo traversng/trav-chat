@@ -6,6 +6,8 @@ import authReducer from './reducer-auth'
 import actionNewChatItem from '../actions/action-new-chat-text'
 import Constants from '../constants'
 
+
+console.log('thunk: ', thunk)
 const logger = store => next => action => {
   console.log('dispatching', action)
   let result = next(action)
@@ -21,12 +23,12 @@ const chatApp = combineReducers({
 });
 
 const store = createStore(chatApp, applyMiddleware(thunk, logger));
-store.dispatch({
-	type:  Constants.ATTEMPTING_LOGIN,
-	auth: {
-		currently: Constants.ANONYMOUS,
-		username: null,
-		uid: null
-		}
-	})
-export default chatApp
+// store.dispatch({
+// 	type:  Constants.ATTEMPTING_LOGIN,
+// 	auth: {
+// 		currently: Constants.ANONYMOUS,
+// 		username: null,
+// 		uid: null
+// 		}
+// 	})
+export default store

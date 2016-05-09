@@ -8,8 +8,7 @@ const Ref = new Firebase(Constants.FIREBASE)
 
 class GooglePlusLoginBtn extends Component {
 	handleClick = ( socialNetwork ) => {
-		console.log('social network in google login: ' + socialNetwork)
-		Auth.attemptLogin( socialNetwork )
+		Auth( socialNetwork )
 	}
 
 	render() {
