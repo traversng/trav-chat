@@ -3,6 +3,9 @@ import { connect } from 'react-redux'
 import chatItemReducer from '../reducers/reducer-chat-list'
 import store from '../store'
 import ChatItem from '../components/chat-components/chatItem'
+import {listenForChats} from '../actions/chatList';
+
+listenForChats();
 
 const mapStateToProps = (store) => ({
 	chatList: store.chatList
@@ -10,7 +13,7 @@ const mapStateToProps = (store) => ({
 
 const ChatList = ( props ) => (
 	<ul>
-    	{ chatList.map( (item) => <ChatItem key={ item.id } text={ item.text }/> ) }
+    	{ props.chatList.map( (item, i) => <ChatItem key={i} text={ item.text }/> ) }
   	</ul>
 )
 
