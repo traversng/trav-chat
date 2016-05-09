@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import Firebase from 'firebase'
-import SocialAuthentication from './firebaseSocialAuth'
 import Auth from '../../actions/auth'
 import Constants from '../../constants'
 

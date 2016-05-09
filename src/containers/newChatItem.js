@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import store from '../reducers/chatReducer'
+import store from '../store'
 import actionNewChatItem from '../actions/action-new-chat-text'
 
 let NewChatItem = ( store ) =>  {
