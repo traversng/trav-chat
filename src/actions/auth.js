@@ -1,10 +1,31 @@
 import Constants from '../constants'
 import Firebase from 'firebase'
 import connect from 'react-redux'
-import store from '../reducers/chatReducer'
+import * as types from './types';
 import { push } from 'react-router-redux'
 import { browserHistory } from 'react-router'
 const Ref = new Firebase(Constants.FIREBASE)
+
+export const auth = (socialNetwork) => (
+	dispatch => {
+		dispatch({type: types.LOGIN});
+		return new Promise((resolve, reject) => {
+			Ref.authWithOAuthPopup(socialNetwork, (err, authData) => {
+				if (err) {
+					console.error(err.stack)
+					dispatch({type: types.LOGIN_COMPLETE, error: true, payload: err,});
+					reject(err);
+				} else {
+					dispatch({
+	                	type: types.LOGIN_COMPLETE,
+	                	payload: authData
+	             	});
+	             	resolve(authData);
+				}
+			});
+		})
+	}
+);
 
 const Auth = (socialNetwork) => {
     Ref.authWithOAuthPopup(socialNetwork, (error, authData) => {

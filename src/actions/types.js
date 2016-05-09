@@ -1,0 +1,4 @@
+export const LOGIN = 'LOGIN';
+export const LOGIN_COMPLETE = 'LOGIN_COMPLETE';
+export const RECEIVE_CHAT_ITEM = 'RECEIVE_CHAT_ITEM';
+export const CREATE_CHAT_ITEM = 'CREATE_CHAT_ITEM';

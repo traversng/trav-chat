@@ -21,3 +21,10 @@
     background-color: #3B5998;
     color: white;
 }
+
+.chat-img{
+    width: 60px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+}

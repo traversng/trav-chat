@@ -1,10 +1,26 @@
 import React from 'react'
+import { connect } from 'react-redux'
 
-const ChatItem = ( text ) => {
-	console.log('in ChatItem store props: ', text);
+const ChatItem = ( text, user ) => {
+	console.log('user: ', user)
 	return (
-		<li>{ text.text }</li>
+		<div>
+			<li>
+				{ text.text }
+				<span>
+					<img src={ user.avatar } alt="user avatar" className="chat-img"/>
+				</span>
+			</li>
+		</div>
 	)
 }
 
-export default ChatItem
+const mapStateToProps = ( state ) => {
+	return {
+		user: state 
+	}
+}
+
+
+
+export default connect(mapStateToProps)(ChatItem)

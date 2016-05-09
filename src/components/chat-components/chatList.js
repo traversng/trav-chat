@@ -9,7 +9,7 @@ const ChatList = ( props ) => {
 	let chatList = props.props.chatArray
 	return(
 	<ul>
-    	{ chatList.map( (item) => <ChatItem key={ item.id } text={ item.text }/> ) }
+    	{ chatList.map( (item) => <ChatItem key={ item.id } state={ props }/> ) }
   	</ul>
   	)
 }

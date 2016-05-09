@@ -1,23 +1,21 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import chatItemReducer from '../reducers/reducer-chat-list'
-import store from '../reducers/chatReducer'
+import store from '../store'
 import ChatItem from '../components/chat-components/chatItem'
+import {listenForChats} from '../actions/chatList';
 
-const ChatList = ( props ) => {
-	console.log('props in ChatList: ', props)
-	let chatList = props.props.chatArray
-	return(
+listenForChats();
+
+const mapStateToProps = (store) => ({
+	chatList: store.chatList
+});
+
+const ChatList = ( props ) => (
 	<ul>
-    	{ chatList.map( (item) => <ChatItem key={ item.id } text={ item.text }/> ) }
+    	{ props.chatList.map( (item, i) => <ChatItem key={i} text={ item.text }/> ) }
   	</ul>
-  	)
-}
+)
 
-const mapStateToProps = ( store ) => {
-	return {
-		props: store
-	}
-}
 
 export default connect(mapStateToProps)(ChatList)
