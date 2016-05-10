@@ -1,26 +1,31 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-const ChatItem = ( text, user ) => {
-	console.log('user: ', user)
+const mapStateToProps = ( state ) => {
+	return {
+		props: state
+	}
+}
+
+const ChatItem = ( props ) => {
+	let socialNetwork = props.props.auth['socialNetwork']
+	console.log('props: ', props)
 	return (
 		<div>
 			<li>
-				{ text.text }
 				<span>
-					<img src={ user.avatar } alt="user avatar" className="chat-img"/>
+					<img src={ props.props.auth.authData[socialNetwork].profileImageURL } alt="user avatar" className="chat-img"/>
 				</span>
+				{ props.text }
 			</li>
 		</div>
 	)
 }
 
-const mapStateToProps = ( state ) => {
-	return {
-		user: state 
-	}
-}
+
 
 
 
 export default connect(mapStateToProps)(ChatItem)
+
+//

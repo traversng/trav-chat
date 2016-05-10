@@ -9,6 +9,10 @@ const mapActionsToProps = (dispatch) => ({
 	)
 });
 
+const mapStateToProps = ( state ) => ({ // Working on getting socialNetworks displayName to assign to authUser from actions -> auth.js
+	authUser: state.auth
+})
+
 class ChatInput extends Component {
 	createChat = (e) => {
 		e.preventDefault()
