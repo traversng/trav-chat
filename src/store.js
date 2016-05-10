@@ -13,12 +13,4 @@ const chatApp = combineReducers({
 });
 
 const store = createStore(chatApp, applyMiddleware(thunk, createLogger()));
-// store.dispatch({
-// 	type:  Constants.ATTEMPTING_LOGIN,
-// 	auth: {
-// 		currently: Constants.ANONYMOUS,
-// 		username: null,
-// 		uid: null
-// 		}
-// 	})
 export default store
