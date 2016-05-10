@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import { bindActionCreators } from 'redux'
 import { Provider } from 'react-redux'
 import store from '../store'
-import actionNewChatItem from '../actions/action-new-chat-text'
+// import newChat from '../actions/newChat'
 import ChatList from './chatList'
 import NewChatItem from './newChatItem'
 
@@ -15,10 +15,10 @@ class App extends Component {
 					<h3>Trav Cast</h3>
 				</div>
 				<div className="panel-body">
-					<ChatList { ...bindActionCreators( actionNewChatItem, store.dispatch) }/>
+					<ChatList />
 				</div>
 				<div className="panel-footer">
-					<NewChatItem { ...bindActionCreators( actionNewChatItem, store.dispatch) }/>
+					<NewChatItem />
 				</div>
 			</div>
 		)

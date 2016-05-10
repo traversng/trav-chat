@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
-import actionNewChatItem from '../actions/action-new-chat-text'
+// import newChat from '../actions/newChat'
 import {newChatPost} from '../actions/chatList';
 
 const mapActionsToProps = (dispatch) => ({
@@ -9,7 +9,7 @@ const mapActionsToProps = (dispatch) => ({
 	)
 });
 
-class NewChatItem extends Component {
+class ChatInput extends Component {
 	createChat = (e) => {
 		e.preventDefault()
 		this.props.postChat(this.input.value);
@@ -42,4 +42,4 @@ class NewChatItem extends Component {
 }
 
 
-export default connect(null, mapActionsToProps)(NewChatItem)
+export default connect(null, mapActionsToProps)(ChatInput)

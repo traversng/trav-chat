@@ -1,5 +1,5 @@
 let chatItemId = 0
-const actionNewChatItem = ( chatString ) => {
+const newChat = ( chatString ) => {
 	console.log('new chat string: ' + chatString);
 	return {
 		id: chatItemId++,
@@ -8,4 +8,4 @@ const actionNewChatItem = ( chatString ) => {
 	}
 }
 
-export default actionNewChatItem
+export default newChat

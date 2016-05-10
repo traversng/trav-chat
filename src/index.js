@@ -6,9 +6,6 @@ import { createStore, applyMiddleware, bindActionCreators } from 'redux'
 import router from './router'
 import Auth from './actions/auth'
 
-// ================ ACTIONS ================== //
-import actionNewChatItem from './actions/action-new-chat-text'
-
 // ================== COMBINE REDUCERS ============ //
 import chatApp from './store'
 	
