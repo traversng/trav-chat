@@ -1,5 +1,4 @@
 import Firebase from 'firebase'
-import chatItemReducer from './reducer-chat-item'
 import * as types from '../actions/types';
 import map from 'lodash/map';
 
