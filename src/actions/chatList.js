@@ -17,7 +17,6 @@ export function newChatPost( post ) {
 		dispatch({type: CREATE_CHAT_ITEM});
 		Posts.push({
 			text: post
-			author: 
 		});
 	}
 }

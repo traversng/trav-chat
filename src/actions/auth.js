@@ -21,8 +21,9 @@ export const auth = (socialNetwork) => (
 	                	payload: { 	// Need to specify want I want on the state object. Currently placing the entire authData firebase response on payload. 
 	                				// This is causing complications in the chat component. I want each post to be proceeded by the socialnetworks displayname
 	                				// I want this to be available for lines 12 - 14 of containers -> newChatItem.js
-	                		authData,
-	                		socialNetwork
+	                		user: authData[socialNetwork].displayName,
+	                		avatar: authData[socialNetwork].profileImageURL,
+	                		authData
 	                	}
 	             	});
 	             	resolve(authData);
