@@ -24,8 +24,12 @@
 
 .chat-img{
     width: 60px;
-    height: 60px;
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
     border-radius: 50%;
+}
+
+.chat-list-item {
+    list-style: none;
+    margin-right: 20px;
 }
