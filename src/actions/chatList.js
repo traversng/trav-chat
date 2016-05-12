@@ -16,7 +16,10 @@ export function newChatPost( post ) {
 	return dispatch => {
 		dispatch({type: CREATE_CHAT_ITEM});
 		Posts.push({
-			text: post
+			text: post,
+			user: store.getState().auth.users[0].userId,
+			userName: store.getState().auth.users[0].userName,
+			userAvatar: store.getState().auth.users[0].userAvatar
 		});
 	}
 }

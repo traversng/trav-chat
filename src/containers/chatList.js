@@ -13,7 +13,7 @@ const mapStateToProps = (store) => ({
 
 const ChatList = ( props ) => (
 	<ul>
-    	{ props.chatList.map( (item, i) => <ChatItem key={i} text={ item.text }/> ) }
+    	{ props.chatList.map( (item, i) => <ChatItem key={i} text={ item.text } user={ item.user } userAvatar={ item.userAvatar } userName={ item.userName }/> ) }
   	</ul>
 )
 

@@ -1,7 +1,7 @@
 import Constants from '../constants'
 import * as types from '../actions/types';
 
-const authReducer = (state = {}, {type, error, payload}) => {
+const authReducer = (state = {}, { type, error, payload }) => {
 	switch (type) {
 		case types.LOGIN:
 			return state;
