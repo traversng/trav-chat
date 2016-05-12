@@ -10,14 +10,14 @@ const mapStateToProps = ( state ) => {
 const ChatItem = ( props ) => {
 	console.log('props: ', props)
 	return (
-		<div>
-			<li>
-				<h3>{ props.props.auth.user }</h3>
-				<span>
-					<img src={ props.props.auth.avatar } alt="user avatar" className="chat-img"/>
-				</span>
-				{ props.text }
-			</li>
+		<div className="media">
+			<div className="media-left">
+				<img className="chat-img media-object" src={ props.props.auth.avatar } alt="user avatar"/>
+			</div>
+			<div className="chat-list-item media-body">
+				<h4 className="media-heading">{ props.props.auth.user }</h4>
+				<p className="chat-text well">{ props.text }</p>
+			</div>
 		</div>
 	)
 }
