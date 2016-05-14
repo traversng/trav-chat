@@ -17,9 +17,10 @@ export function newChatPost( post ) {
 		dispatch({type: CREATE_CHAT_ITEM});
 		Posts.push({
 			text: post,
-			user: store.getState().auth.users[0].userId,
+			uid: store.getState().auth.users[0].userId,
 			userName: store.getState().auth.users[0].userName,
-			userAvatar: store.getState().auth.users[0].userAvatar
+			userAvatar: store.getState().auth.users[0].userAvatar,
+			time: Firebase.ServerValue.TIMESTAMP
 		});
 	}
 }
