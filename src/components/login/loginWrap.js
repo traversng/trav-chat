@@ -30,9 +30,9 @@ class LoginWrap extends Component {
 			<div className="jumbotron col-lg-8 col-lg-offset-2">
 				<h1 className="text-center">Trav Chat</h1>
 				<h3 className="text-center">Login with your social accounts for awesomeness</h3>
-			   	<FaceBookLoginBtn />
+			   	<FaceBookLoginBtn login={this.loginAndGo}/>
 			   	<GooglePlusLoginBtn login={this.loginAndGo}/>
-			   	<GithubLoginBtn />          
+			   	<GithubLoginBtn login={this.loginAndGo}/>          
 			</div>
 		);
 	}
